@@ -14,7 +14,7 @@
             background-color: #0f0f0f;
             color: #e0e0e0;
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* --- Estilos del Loader Minecraft Style MEJORADO --- */
@@ -157,7 +157,7 @@
             opacity: 1;
         }
 
-        /* --- Carrusel Moderno --- */
+        /* --- Carrusel Moderno con Lista Infinita --- */
         .carousel-container {
             position: relative;
             width: 100%;
@@ -175,10 +175,13 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             gap: 2rem;
             padding: 1rem;
+            will-change: transform;
         }
 
+        /* Estilo para slide individual - siempre centrada visualmente */
         .carousel-slide {
-            flex: 0 0 calc(33.333% - 1.33rem);
+            flex: 0 0 auto;
+            width: 300px;
             border-radius: 16px;
             overflow: hidden;
             position: relative;
@@ -188,14 +191,25 @@
                 0 20px 40px rgba(0, 0, 0, 0.4),
                 0 0 0 1px rgba(255, 255, 255, 0.05);
             cursor: pointer;
+            opacity: 0.6;
+            transform: scale(0.9);
         }
 
-        .carousel-slide:hover {
-            transform: translateY(-10px) scale(1.03);
+        /* Slide activa - centrada y destacada */
+        .carousel-slide.active {
+            opacity: 1;
+            transform: scale(1);
             box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.6),
-                0 0 20px rgba(74, 222, 128, 0.3),
-                0 0 0 1px rgba(74, 222, 128, 0.2);
+                0 30px 60px rgba(0, 0, 0, 0.7),
+                0 0 0 2px rgba(74, 222, 128, 0.6),
+                0 0 30px rgba(74, 222, 128, 0.3);
+            z-index: 10;
+        }
+
+        /* Slides adyacentes a la activa */
+        .carousel-slide.adjacent {
+            opacity: 0.8;
+            transform: scale(0.95);
         }
 
         .carousel-image {
@@ -206,8 +220,9 @@
             transition: transform 0.5s ease;
         }
 
-        .carousel-slide:hover .carousel-image {
-            transform: scale(1.05);
+        .carousel-slide.active .carousel-image {
+            transform: scale(1.02);
+            filter: brightness(1.05);
         }
 
         .carousel-caption {
@@ -219,6 +234,11 @@
             padding: 1.5rem;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+        }
+
+        .carousel-slide.active .carousel-caption {
+            transform: translateY(0);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
         }
 
         .carousel-slide:hover .carousel-caption {
@@ -239,7 +259,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 10;
+            z-index: 30;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
@@ -258,56 +278,33 @@
             right: 20px;
         }
 
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 2rem;
-        }
-
-        .carousel-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .carousel-dot.active {
-            background: #4ade80;
-            transform: scale(1.2);
-            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
-        }
-
-        .carousel-dot::after {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-
-        .carousel-dot:hover::after {
-            border-color: rgba(74, 222, 128, 0.3);
-        }
-
-        /* Indicadores de posición */
+        /* Indicadores de posición - siempre visible */
         .carousel-position {
             position: absolute;
             top: 1rem;
-            right: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.7);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 30;
+            white-space: nowrap;
+        }
+
+        .carousel-position #current-slide {
+            color: #4ade80;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Contenedor para centrar el carrusel */
+        .carousel-center-helper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
 
         /* --- Modal de Imagen Expandida --- */
@@ -397,6 +394,11 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .image-counter #modal-current {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
         /* Animación de entrada de contenido */
         .content-fade {
             opacity: 0;
@@ -433,7 +435,11 @@
         /* Responsive */
         @media (max-width: 1024px) {
             .carousel-slide {
-                flex: 0 0 calc(50% - 1rem);
+                width: 280px;
+            }
+            
+            .carousel-image {
+                height: 280px;
             }
         }
 
@@ -470,14 +476,13 @@
                 padding-right: 1rem;
             }
 
-            /* Carrusel centrado en móvil */
+            /* Carrusel móvil */
             .carousel-slide {
-                flex: 0 0 calc(100% - 2rem);
-                margin: 0 1rem;
+                width: 250px;
             }
 
-            .carousel-track {
-                justify-content: center;
+            .carousel-image {
+                height: 250px;
             }
 
             .carousel-nav {
@@ -486,8 +491,12 @@
                 font-size: 0.8rem;
             }
 
-            .carousel-image {
-                height: 250px;
+            .carousel-nav.prev {
+                left: 10px;
+            }
+
+            .carousel-nav.next {
+                right: 10px;
             }
 
             /* Ajustes para modal en móvil */
@@ -517,8 +526,12 @@
                 max-width: 95% !important;
             }
 
+            .carousel-slide {
+                width: 220px;
+            }
+
             .carousel-image {
-                height: 200px;
+                height: 220px;
             }
 
             .carousel-nav {
@@ -526,23 +539,10 @@
                 height: 35px;
             }
 
-            .carousel-nav.prev {
-                left: 10px;
+            .carousel-position {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
             }
-
-            .carousel-nav.next {
-                right: 10px;
-            }
-
-            .carousel-slide {
-                margin: 0 0.5rem;
-            }
-        }
-
-        /* Utilidad para centrar en móvil */
-        .mobile-center-slide {
-            flex: 0 0 calc(100% - 2rem) !important;
-            margin: 0 auto !important;
         }
     </style>
 </head>
@@ -612,23 +612,21 @@
             
             <div class="carousel-container">
                 <div class="carousel-position">
-                    <span id="current-slide">1</span> / <span id="total-slides">5</span>
+                    <span id="current-slide">1</span> / <span id="total-slides">4</span>
                 </div>
                 
                 <div class="carousel-nav prev" onclick="prevSlide()">
                     <i class="fas fa-chevron-left"></i>
                 </div>
                 
-                <div class="carousel-track" id="carousel-track">
-                    <!-- Las slides se generan dinámicamente con JavaScript -->
+                <div class="carousel-center-helper">
+                    <div class="carousel-track" id="carousel-track">
+                        <!-- Las slides se generan dinámicamente con JavaScript -->
+                    </div>
                 </div>
                 
                 <div class="carousel-nav next" onclick="nextSlide()">
                     <i class="fas fa-chevron-right"></i>
-                </div>
-                
-                <div class="carousel-dots" id="carousel-dots">
-                    <!-- Los puntos se generan dinámicamente -->
                 </div>
             </div>
         </div>
@@ -649,7 +647,7 @@
             <img id="expanded-image" class="expanded-image" src="" alt="Imagen expandida">
             
             <div class="image-counter">
-                <span id="modal-current">1</span> / <span id="modal-total">5</span>
+                <span id="modal-current">1</span> / <span id="modal-total">4</span>
             </div>
         </div>
     </div>
@@ -788,62 +786,88 @@
             });
         });
 
-        // Variables del carrusel
+        // Variables del carrusel infinito
         let currentSlide = 0;
-        const totalSlides = 4;
+        const totalSlides = 4; // Número real de imágenes
         let isAnimating = false;
         let isZoomed = false;
         let currentExpandedImage = 0;
+        const slidesToShow = 7; // Número total de slides visibles (incluye clones)
+        let carouselItems = [];
 
-        // Inicializar carrusel
+        // Inicializar carrusel infinito
         function initCarousel() {
             const carouselTrack = document.getElementById('carousel-track');
-            const carouselDots = document.getElementById('carousel-dots');
             
             // Limpiar contenido existente
             carouselTrack.innerHTML = '';
-            carouselDots.innerHTML = '';
+            carouselItems = [];
             
             // Crear slides
             const slideDescriptions = [
                 "Interfaz principal moderna",
                 "Gestor de contenido",
                 "Descargar mods",
-                "Cofniguracion del launcher",
+                "Configuración del launcher",
             ];
             
-            for (let i = 0; i < totalSlides; i++) {
-                // Crear slide
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                slide.dataset.index = i;
+            // Crear array con todas las slides (repetidas para efecto infinito)
+            const totalVisibleSlides = slidesToShow;
+            const half = Math.floor(totalVisibleSlides / 2);
+            
+            // Crear slides (incluyendo clones para efecto infinito)
+            for (let i = -half; i <= half; i++) {
+                const slideIndex = ((currentSlide + i) % totalSlides + totalSlides) % totalSlides;
+                const isActive = i === 0;
+                const isAdjacent = Math.abs(i) === 1;
                 
-                slide.innerHTML = `
-                    <img src="resources/cap${i + 1}.png" alt="Captura ${i + 1}" class="carousel-image">
-                    <div class="carousel-caption">
-                        <h3 class="font-bold text-white">${slideDescriptions[i]}</h3>
-                        <p class="text-gray-300 text-sm mt-1">Haz clic para expandir</p>
-                    </div>
-                `;
-                
-                // Añadir clase para centrar en móvil
-                if (window.innerWidth <= 768) {
-                    slide.classList.add('mobile-center-slide');
-                }
-                
-                slide.onclick = () => expandImage(i);
+                const slide = createSlide(slideIndex, slideDescriptions[slideIndex], isActive, isAdjacent);
                 carouselTrack.appendChild(slide);
-                
-                // Crear punto
-                const dot = document.createElement('div');
-                dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
-                dot.dataset.index = i;
-                dot.onclick = () => goToSlide(i);
-                carouselDots.appendChild(dot);
+                carouselItems.push({
+                    element: slide,
+                    index: slideIndex,
+                    position: i
+                });
             }
             
             // Actualizar contador
             updatePosition();
+            
+            // Centrar carrusel inicialmente
+            centerCarousel();
+        }
+
+        // Crear una slide
+        function createSlide(index, description, isActive = false, isAdjacent = false) {
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide';
+            
+            if (isActive) slide.classList.add('active');
+            if (isAdjacent) slide.classList.add('adjacent');
+            
+            slide.innerHTML = `
+                <img src="resources/cap${index + 1}.png" alt="Captura ${index + 1}" class="carousel-image">
+                <div class="carousel-caption">
+                    <h3 class="font-bold text-white">${description}</h3>
+                    <p class="text-gray-300 text-sm mt-1">Captura ${index + 1}</p>
+                </div>
+            `;
+            
+            slide.onclick = () => {
+                // Ir directamente a esta slide
+                const targetIndex = index;
+                const currentCenter = carouselItems.find(item => item.position === 0);
+                const diff = targetIndex - currentCenter.index;
+                
+                if (diff !== 0) {
+                    currentSlide = targetIndex;
+                    updateCarousel(diff > 0 ? 'next' : 'prev');
+                } else {
+                    expandImage(index);
+                }
+            };
+            
+            return slide;
         }
 
         // Expandir imagen
@@ -901,88 +925,93 @@
             expandImage(currentExpandedImage);
         }
 
-        // Navegar al slide específico
-        function goToSlide(index) {
-            if (isAnimating) return;
-            
-            currentSlide = index;
-            updateCarousel();
-            updatePosition();
-        }
-
         // Slide siguiente
         function nextSlide() {
             if (isAnimating) return;
-            
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                updateCarousel();
-                updatePosition();
-            } else {
-                // Efecto de bucle
-                currentSlide = 0;
-                updateCarousel();
-                updatePosition();
-            }
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel('next');
         }
 
         // Slide anterior
         function prevSlide() {
             if (isAnimating) return;
-            
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateCarousel();
-                updatePosition();
-            } else {
-                // Efecto de bucle
-                currentSlide = totalSlides - 1;
-                updateCarousel();
-                updatePosition();
-            }
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel('prev');
         }
 
-        // Actualizar carrusel
-        function updateCarousel() {
+        // Actualizar carrusel infinito
+        function updateCarousel(direction) {
             if (isAnimating) return;
             
             isAnimating = true;
             const carouselTrack = document.getElementById('carousel-track');
-            const slides = document.querySelectorAll('.carousel-slide');
-            const dots = document.querySelectorAll('.carousel-dot');
             
-            // Calcular desplazamiento basado en responsive
-            let slidesToShow = 3;
-            if (window.innerWidth <= 1024) slidesToShow = 2;
-            if (window.innerWidth <= 768) {
-                slidesToShow = 1;
-                // Asegurar que todas las slides tengan la clase de centrado
-                slides.forEach(slide => {
-                    slide.classList.add('mobile-center-slide');
-                });
+            // Aplicar animación
+            if (direction === 'next') {
+                carouselTrack.style.transform = 'translateX(-100px)';
+                carouselTrack.style.opacity = '0.7';
             } else {
-                // Remover clase de centrado en desktop
-                slides.forEach(slide => {
-                    slide.classList.remove('mobile-center-slide');
-                });
+                carouselTrack.style.transform = 'translateX(100px)';
+                carouselTrack.style.opacity = '0.7';
             }
             
-            // Calcular transformación
-            const slideWidth = 100 / slidesToShow;
-            const translateX = -(currentSlide * slideWidth);
-            
-            // Aplicar transformación con animación
-            carouselTrack.style.transform = `translateX(${translateX}%)`;
-            
-            // Actualizar puntos activos
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
-            
-            // Resetear flag de animación
             setTimeout(() => {
-                isAnimating = false;
-            }, 800);
+                // Reconstruir carrusel con nuevas posiciones
+                const totalVisibleSlides = slidesToShow;
+                const half = Math.floor(totalVisibleSlides / 2);
+                carouselTrack.innerHTML = '';
+                carouselItems = [];
+                
+                // Crear nuevas slides con posiciones actualizadas
+                for (let i = -half; i <= half; i++) {
+                    let slideIndex;
+                    if (direction === 'next') {
+                        slideIndex = (currentSlide + i) % totalSlides;
+                    } else {
+                        slideIndex = (currentSlide - i) % totalSlides;
+                    }
+                    slideIndex = (slideIndex + totalSlides) % totalSlides;
+                    
+                    const isActive = i === 0;
+                    const isAdjacent = Math.abs(i) === 1;
+                    
+                    const slide = createSlide(slideIndex, 
+                        ["Interfaz principal moderna", "Gestor de contenido", "Descargar mods", "Configuración del launcher"][slideIndex], 
+                        isActive, isAdjacent);
+                    carouselTrack.appendChild(slide);
+                    carouselItems.push({
+                        element: slide,
+                        index: slideIndex,
+                        position: i
+                    });
+                }
+                
+                // Resetear transformación
+                carouselTrack.style.transform = 'translateX(0)';
+                carouselTrack.style.opacity = '1';
+                
+                // Actualizar posición
+                updatePosition();
+                
+                // Resetear flag de animación
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 300);
+            }, 300);
+        }
+
+        // Centrar carrusel visualmente
+        function centerCarousel() {
+            const carouselTrack = document.getElementById('carousel-track');
+            const container = document.querySelector('.carousel-container');
+            
+            if (!carouselTrack || !container) return;
+            
+            const trackWidth = carouselTrack.scrollWidth;
+            const containerWidth = container.clientWidth;
+            const offset = (containerWidth - 300) / 2; // 300px es el ancho de cada slide
+            
+            carouselTrack.style.transform = `translateX(${offset}px)`;
         }
 
         // Actualizar indicador de posición
@@ -999,7 +1028,7 @@
         
         function startAutoPlay() {
             stopAutoPlay();
-            autoPlayInterval = setInterval(nextSlide, 5000);
+            autoPlayInterval = setInterval(nextSlide, 4000);
         }
         
         function stopAutoPlay() {
@@ -1008,45 +1037,7 @@
             }
         }
 
-        // Eventos táctiles para zoom en móvil
-        let initialDistance = null;
-
-        function handleTouchStart(e) {
-            if (e.touches.length === 2) {
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                initialDistance = Math.hypot(
-                    touch2.clientX - touch1.clientX,
-                    touch2.clientY - touch1.clientY
-                );
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (e.touches.length === 2 && initialDistance !== null) {
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                const currentDistance = Math.hypot(
-                    touch2.clientX - touch1.clientX,
-                    touch2.clientY - touch1.clientY
-                );
-
-                const expandedImage = document.getElementById('expanded-image');
-                if (currentDistance > initialDistance + 10 && !isZoomed) {
-                    // Zoom in
-                    zoomImage();
-                } else if (currentDistance < initialDistance - 10 && isZoomed) {
-                    // Zoom out
-                    zoomImage();
-                }
-            }
-        }
-
-        function handleTouchEnd() {
-            initialDistance = null;
-        }
-
-        // Iniciar auto-play cuando el mouse sale del carrusel
+        // Inicializar eventos
         document.addEventListener('DOMContentLoaded', () => {
             const carousel = document.querySelector('.carousel-container');
             const imageModal = document.getElementById('image-modal');
@@ -1054,12 +1045,9 @@
             if (carousel) {
                 carousel.addEventListener('mouseenter', stopAutoPlay);
                 carousel.addEventListener('mouseleave', startAutoPlay);
-            }
-            
-            if (imageModal) {
-                imageModal.addEventListener('touchstart', handleTouchStart);
-                imageModal.addEventListener('touchmove', handleTouchMove);
-                imageModal.addEventListener('touchend', handleTouchEnd);
+                
+                // Ajustar al redimensionar
+                window.addEventListener('resize', centerCarousel);
             }
             
             // Eventos de teclado para navegación
@@ -1102,25 +1090,12 @@
             
             // Iniciar auto-play
             startAutoPlay();
+            
+            // Centrar carrusel después de un breve delay
+            setTimeout(centerCarousel, 100);
         });
 
-        // Redimensionar ventana
-        window.addEventListener('resize', () => {
-            updateCarousel();
-            // Ajustar slides para centrar en móvil
-            const slides = document.querySelectorAll('.carousel-slide');
-            if (window.innerWidth <= 768) {
-                slides.forEach(slide => {
-                    slide.classList.add('mobile-center-slide');
-                });
-            } else {
-                slides.forEach(slide => {
-                    slide.classList.remove('mobile-center-slide');
-                });
-            }
-        });
-
-        // Agregar animación shake
+        // Agregar animaciones CSS
         const style = document.createElement('style');
         style.textContent = `
             @keyframes shake {
@@ -1138,6 +1113,11 @@
             @keyframes zoomOut {
                 from { transform: scale(1.5); }
                 to { transform: scale(1); }
+            }
+            
+            /* Animación suave para transición de slides */
+            .carousel-track {
+                transition: transform 0.3s ease, opacity 0.3s ease;
             }
         `;
         document.head.appendChild(style);
