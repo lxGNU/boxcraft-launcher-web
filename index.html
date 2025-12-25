@@ -187,6 +187,7 @@
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.4),
                 0 0 0 1px rgba(255, 255, 255, 0.05);
+            cursor: pointer;
         }
 
         .carousel-slide:hover {
@@ -309,6 +310,93 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* --- Modal de Imagen Expandida --- */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content-wrapper {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .expanded-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        .expanded-image.zoomed {
+            cursor: zoom-out;
+            transform: scale(1.5);
+        }
+
+        .modal-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1001;
+        }
+
+        .modal-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-btn:hover {
+            background: rgba(74, 222, 128, 0.3);
+            border-color: #4ade80;
+            transform: scale(1.1);
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         /* Animación de entrada de contenido */
         .content-fade {
             opacity: 0;
@@ -382,8 +470,14 @@
                 padding-right: 1rem;
             }
 
+            /* Carrusel centrado en móvil */
             .carousel-slide {
                 flex: 0 0 calc(100% - 2rem);
+                margin: 0 1rem;
+            }
+
+            .carousel-track {
+                justify-content: center;
             }
 
             .carousel-nav {
@@ -394,6 +488,23 @@
 
             .carousel-image {
                 height: 250px;
+            }
+
+            /* Ajustes para modal en móvil */
+            .modal-content-wrapper {
+                width: 95%;
+                height: 85%;
+            }
+
+            .modal-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .image-counter {
+                bottom: 10px;
+                font-size: 0.8rem;
             }
         }
 
@@ -422,6 +533,16 @@
             .carousel-nav.next {
                 right: 10px;
             }
+
+            .carousel-slide {
+                margin: 0 0.5rem;
+            }
+        }
+
+        /* Utilidad para centrar en móvil */
+        .mobile-center-slide {
+            flex: 0 0 calc(100% - 2rem) !important;
+            margin: 0 auto !important;
         }
     </style>
 </head>
@@ -486,7 +607,7 @@
                 <span class="bc-gradient">Capturas</span> del Launcher
             </h2>
             <p class="text-gray-400 text-center max-w-2xl mx-auto mb-12">
-                Descubre la interfaz moderna y las características innovadoras de BoxCraft Launcher
+                Haz clic en cualquier imagen para expandirla y explorar los detalles
             </p>
             
             <div class="carousel-container">
@@ -512,6 +633,26 @@
             </div>
         </div>
     </section>
+
+    <!-- Modal de Imagen Expandida -->
+    <div class="image-modal" id="image-modal">
+        <div class="modal-content-wrapper">
+            <div class="modal-controls">
+                <button class="modal-btn" onclick="zoomImage()" title="Zoom">
+                    <i class="fas fa-search-plus" id="zoom-icon"></i>
+                </button>
+                <button class="modal-btn" onclick="closeImageModal()" title="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <img id="expanded-image" class="expanded-image" src="" alt="Imagen expandida">
+            
+            <div class="image-counter">
+                <span id="modal-current">1</span> / <span id="modal-total">5</span>
+            </div>
+        </div>
+    </div>
 
     <div id="modal" class="fixed inset-0 z-[100] items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-6">
         <div class="modal-content bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 relative shadow-2xl">
@@ -649,9 +790,10 @@
 
         // Variables del carrusel
         let currentSlide = 0;
-        const totalSlides = 5;
-        const slidesPerView = 3;
+        const totalSlides = 4;
         let isAnimating = false;
+        let isZoomed = false;
+        let currentExpandedImage = 0;
 
         // Inicializar carrusel
         function initCarousel() {
@@ -668,7 +810,6 @@
                 "Gestor de instalaciones",
                 "Configuración avanzada",
                 "Panel de control del juego",
-                "Renderizado de alta calidad"
             ];
             
             for (let i = 0; i < totalSlides; i++) {
@@ -681,10 +822,16 @@
                     <img src="resources/cap${i + 1}.png" alt="Captura ${i + 1}" class="carousel-image">
                     <div class="carousel-caption">
                         <h3 class="font-bold text-white">${slideDescriptions[i]}</h3>
-                        <p class="text-gray-300 text-sm mt-1">Captura #${i + 1}</p>
+                        <p class="text-gray-300 text-sm mt-1">Haz clic para expandir</p>
                     </div>
                 `;
                 
+                // Añadir clase para centrar en móvil
+                if (window.innerWidth <= 768) {
+                    slide.classList.add('mobile-center-slide');
+                }
+                
+                slide.onclick = () => expandImage(i);
                 carouselTrack.appendChild(slide);
                 
                 // Crear punto
@@ -697,6 +844,61 @@
             
             // Actualizar contador
             updatePosition();
+        }
+
+        // Expandir imagen
+        function expandImage(index) {
+            currentExpandedImage = index;
+            const imageModal = document.getElementById('image-modal');
+            const expandedImage = document.getElementById('expanded-image');
+            const modalCurrent = document.getElementById('modal-current');
+            const modalTotal = document.getElementById('modal-total');
+            
+            expandedImage.src = `resources/cap${index + 1}.png`;
+            expandedImage.classList.remove('zoomed');
+            isZoomed = false;
+            document.getElementById('zoom-icon').className = 'fas fa-search-plus';
+            
+            modalCurrent.textContent = index + 1;
+            modalTotal.textContent = totalSlides;
+            
+            imageModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cerrar modal de imagen
+        function closeImageModal() {
+            const imageModal = document.getElementById('image-modal');
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            isZoomed = false;
+        }
+
+        // Zoom imagen
+        function zoomImage() {
+            const expandedImage = document.getElementById('expanded-image');
+            const zoomIcon = document.getElementById('zoom-icon');
+            
+            if (isZoomed) {
+                expandedImage.classList.remove('zoomed');
+                zoomIcon.className = 'fas fa-search-plus';
+            } else {
+                expandedImage.classList.add('zoomed');
+                zoomIcon.className = 'fas fa-search-minus';
+            }
+            
+            isZoomed = !isZoomed;
+        }
+
+        // Navegar entre imágenes expandidas
+        function navigateExpanded(direction) {
+            if (direction === 'next') {
+                currentExpandedImage = (currentExpandedImage + 1) % totalSlides;
+            } else {
+                currentExpandedImage = (currentExpandedImage - 1 + totalSlides) % totalSlides;
+            }
+            
+            expandImage(currentExpandedImage);
         }
 
         // Navegar al slide específico
@@ -750,9 +952,20 @@
             const dots = document.querySelectorAll('.carousel-dot');
             
             // Calcular desplazamiento basado en responsive
-            let slidesToShow = slidesPerView;
+            let slidesToShow = 3;
             if (window.innerWidth <= 1024) slidesToShow = 2;
-            if (window.innerWidth <= 768) slidesToShow = 1;
+            if (window.innerWidth <= 768) {
+                slidesToShow = 1;
+                // Asegurar que todas las slides tengan la clase de centrado
+                slides.forEach(slide => {
+                    slide.classList.add('mobile-center-slide');
+                });
+            } else {
+                // Remover clase de centrado en desktop
+                slides.forEach(slide => {
+                    slide.classList.remove('mobile-center-slide');
+                });
+            }
             
             // Calcular transformación
             const slideWidth = 100 / slidesToShow;
@@ -795,25 +1008,116 @@
             }
         }
 
+        // Eventos táctiles para zoom en móvil
+        let initialDistance = null;
+
+        function handleTouchStart(e) {
+            if (e.touches.length === 2) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (e.touches.length === 2 && initialDistance !== null) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+
+                const expandedImage = document.getElementById('expanded-image');
+                if (currentDistance > initialDistance + 10 && !isZoomed) {
+                    // Zoom in
+                    zoomImage();
+                } else if (currentDistance < initialDistance - 10 && isZoomed) {
+                    // Zoom out
+                    zoomImage();
+                }
+            }
+        }
+
+        function handleTouchEnd() {
+            initialDistance = null;
+        }
+
         // Iniciar auto-play cuando el mouse sale del carrusel
         document.addEventListener('DOMContentLoaded', () => {
             const carousel = document.querySelector('.carousel-container');
+            const imageModal = document.getElementById('image-modal');
+            
             if (carousel) {
                 carousel.addEventListener('mouseenter', stopAutoPlay);
                 carousel.addEventListener('mouseleave', startAutoPlay);
             }
+            
+            if (imageModal) {
+                imageModal.addEventListener('touchstart', handleTouchStart);
+                imageModal.addEventListener('touchmove', handleTouchMove);
+                imageModal.addEventListener('touchend', handleTouchEnd);
+            }
+            
+            // Eventos de teclado para navegación
+            document.addEventListener('keydown', (e) => {
+                const imageModal = document.getElementById('image-modal');
+                
+                if (imageModal.classList.contains('active')) {
+                    if (e.key === 'Escape') closeImageModal();
+                    if (e.key === 'ArrowLeft') navigateExpanded('prev');
+                    if (e.key === 'ArrowRight') navigateExpanded('next');
+                    if (e.key === 'z' || e.key === 'Z') zoomImage();
+                } else {
+                    if (e.key === 'ArrowLeft') prevSlide();
+                    if (e.key === 'ArrowRight') nextSlide();
+                }
+            });
+            
+            // Navegación con clics en la imagen expandida
+            imageModal.addEventListener('click', (e) => {
+                const expandedImage = document.getElementById('expanded-image');
+                const modalControls = document.querySelector('.modal-controls');
+                
+                // Si se hace clic en la imagen (no en los controles)
+                if (e.target === expandedImage) {
+                    zoomImage();
+                }
+                
+                // Navegación lateral
+                if (e.target === imageModal && !modalControls.contains(e.target)) {
+                    const rect = expandedImage.getBoundingClientRect();
+                    const clickX = e.clientX;
+                    
+                    if (clickX < rect.left + rect.width * 0.3) {
+                        navigateExpanded('prev');
+                    } else if (clickX > rect.left + rect.width * 0.7) {
+                        navigateExpanded('next');
+                    }
+                }
+            });
             
             // Iniciar auto-play
             startAutoPlay();
         });
 
         // Redimensionar ventana
-        window.addEventListener('resize', updateCarousel);
-
-        // Navegación con teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') prevSlide();
-            if (e.key === 'ArrowRight') nextSlide();
+        window.addEventListener('resize', () => {
+            updateCarousel();
+            // Ajustar slides para centrar en móvil
+            const slides = document.querySelectorAll('.carousel-slide');
+            if (window.innerWidth <= 768) {
+                slides.forEach(slide => {
+                    slide.classList.add('mobile-center-slide');
+                });
+            } else {
+                slides.forEach(slide => {
+                    slide.classList.remove('mobile-center-slide');
+                });
+            }
         });
 
         // Agregar animación shake
@@ -823,6 +1127,17 @@
                 0%, 100% { transform: translateX(0); }
                 25% { transform: translateX(-5px); }
                 75% { transform: translateX(5px); }
+            }
+            
+            /* Animación para el zoom */
+            @keyframes zoomIn {
+                from { transform: scale(1); }
+                to { transform: scale(1.5); }
+            }
+            
+            @keyframes zoomOut {
+                from { transform: scale(1.5); }
+                to { transform: scale(1); }
             }
         `;
         document.head.appendChild(style);
