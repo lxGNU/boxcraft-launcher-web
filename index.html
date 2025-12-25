@@ -14,14 +14,14 @@
             background-color: #0f0f0f;
             color: #e0e0e0;
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Desactivado inicialmente para el loader */
+            overflow: hidden;
         }
 
-        /* --- Estilos del Loader Minecraft Style --- */
+        /* --- Estilos del Loader Minecraft Style MEJORADO --- */
         #loader-wrapper {
             position: fixed;
             inset: 0;
-            background-color: #121212;
+            background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -31,42 +31,97 @@
         }
 
         .loader-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 2rem;
-            animation: pulse 1.5s infinite ease-in-out;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 2.5rem;
+            animation: pulse 1.8s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.3));
+        }
+
+        .minecraft-loader-container {
+            position: relative;
+            width: 300px;
+            margin-top: 1rem;
         }
 
         .progress-container {
-            width: 250px;
-            height: 10px;
-            background: #252525;
-            border: 2px solid #333;
+            width: 100%;
+            height: 12px;
+            background: #1a1a1a;
+            border: 3px solid #2a2a2a;
+            border-radius: 6px;
             padding: 2px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .progress-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(74, 222, 128, 0.1) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite linear;
         }
 
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: #4ade80;
-            box-shadow: 0 0 15px #16a34a;
+            background: linear-gradient(90deg, #16a34a, #4ade80, #22c55e);
+            border-radius: 4px;
+            box-shadow: 
+                0 0 20px rgba(74, 222, 128, 0.5),
+                inset 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
             transition: width 0.4s ease;
         }
 
         .loading-text {
-            margin-top: 15px;
-            font-family: monospace;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
             color: #4ade80;
             letter-spacing: 2px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+            position: relative;
+        }
+
+        .loading-text::after {
+            content: '...';
+            animation: dots 1.5s infinite steps(4, end);
+        }
+
+        .chunk-counter {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #888;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 0px #4ade80); }
-            50% { transform: scale(1.1); filter: drop-shadow(0 0 15px #4ade80); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 0px #4ade80); }
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.08) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
 
         /* --- Estilos de la Web --- */
@@ -77,7 +132,7 @@
         }
 
         .glass {
-            background: rgba(20, 20, 20, 0.7);
+            background: rgba(20, 20, 20, 0.85);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -102,6 +157,158 @@
             opacity: 1;
         }
 
+        /* --- Carrusel Moderno --- */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            background: rgba(20, 20, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1rem;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .carousel-slide {
+            flex: 0 0 calc(33.333% - 1.33rem);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .carousel-slide:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(74, 222, 128, 0.3),
+                0 0 0 1px rgba(74, 222, 128, 0.2);
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide:hover .carousel-image {
+            transform: scale(1.05);
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-slide:hover .carousel-caption {
+            transform: translateY(0);
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(74, 222, 128, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .carousel-nav:hover {
+            background: rgba(74, 222, 128, 0.2);
+            border-color: #4ade80;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 20px;
+        }
+
+        .carousel-nav.next {
+            right: 20px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .carousel-dot.active {
+            background: #4ade80;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+        }
+
+        .carousel-dot::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .carousel-dot:hover::after {
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        /* Indicadores de posición */
+        .carousel-position {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         /* Animación de entrada de contenido */
         .content-fade {
             opacity: 0;
@@ -113,96 +320,262 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Estilos para opciones no disponibles */
+        .option-disabled {
+            position: relative;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .option-disabled::after {
+            content: 'PRÓXIMAMENTE';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc2626;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 10px;
+            transform: rotate(15deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .carousel-slide {
+                flex: 0 0 calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loader-logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .minecraft-loader-container {
+                width: 250px;
+            }
+            
+            h1 {
+                font-size: 3.5rem !important;
+            }
+            
+            .modal-content {
+                padding: 1.5rem !important;
+                border-radius: 2rem !important;
+            }
+            
+            .mobile-stack {
+                flex-direction: column;
+                gap: 1.5rem !important;
+            }
+            
+            .mobile-text-center {
+                text-align: center;
+            }
+            
+            .mobile-padding {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .carousel-slide {
+                flex: 0 0 calc(100% - 2rem);
+            }
+
+            .carousel-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8rem;
+            }
+
+            .carousel-image {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.8rem !important;
+            }
+            
+            .modal-content {
+                max-width: 95% !important;
+            }
+
+            .carousel-image {
+                height: 200px;
+            }
+
+            .carousel-nav {
+                width: 35px;
+                height: 35px;
+            }
+
+            .carousel-nav.prev {
+                left: 10px;
+            }
+
+            .carousel-nav.next {
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div id="loader-wrapper">
         <img src="resources/logo.png" alt="Logo" class="loader-logo">
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
+        <div class="minecraft-loader-container">
+            <div class="chunk-counter">Chunks: 0/256</div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
         </div>
-        <div class="loading-text">Cargando chunks...</div>
+        <div class="loading-text">Cargando recursos</div>
     </div>
 
-    <nav class="fixed w-full z-50 glass px-6 py-4 flex justify-between items-center">
+    <nav class="fixed w-full z-50 glass px-4 md:px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <img src="resources/logo.png" alt="BoxCraft Logo" class="w-10 h-10 object-contain rounded-lg">
             <span class="text-xl font-extrabold tracking-tight hidden md:block">BoxCraft <span class="text-green-500">Launcher</span></span>
         </div>
         
-        <div class="flex gap-4">
-            <a href="https://github.com/lxGNU/BoxCraft-Launcher" class="px-5 py-2 rounded-xl border border-white/10 hover:border-green-500 hover:text-green-500 transition-all text-sm font-semibold bg-white/5">
-                <i class="fab fa-github mr-2"></i>Código Fuente
+        <div class="flex gap-2 md:gap-4">
+            <a href="https://github.com/lxGNU/BoxCraft-Launcher" class="px-4 md:px-5 py-2 rounded-xl border border-white/10 hover:border-green-500 hover:text-green-500 transition-all text-sm font-semibold bg-white/5">
+                <i class="fab fa-github mr-2"></i><span class="hidden sm:inline">Código Fuente</span>
             </a>
-            <a href="#" class="px-5 py-2 rounded-xl bg-green-500 text-black hover:bg-green-400 transition-all text-sm font-bold shadow-lg shadow-green-500/20">
-                <i class="fas fa-book mr-2"></i>Documentación
+            <a href="#" class="px-4 md:px-5 py-2 rounded-xl bg-green-500 text-black hover:bg-green-400 transition-all text-sm font-bold shadow-lg shadow-green-500/20">
+                <i class="fas fa-book mr-2"></i><span class="hidden sm:inline">Documentación</span>
             </a>
         </div>
     </nav>
 
-    <main id="main-content" class="content-fade relative pt-32 pb-20 px-6 flex flex-col items-center justify-center min-h-screen text-center">
-        <div class="absolute top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-green-500/5 blur-[150px] rounded-full -z-10"></div>
+    <main id="main-content" class="content-fade relative pt-28 md:pt-32 pb-16 md:pb-20 px-4 md:px-6 flex flex-col items-center justify-center min-h-screen text-center mobile-padding">
+        <div class="absolute top-40 left-1/2 -translate-x-1/2 w-full md:w-[600px] h-[400px] md:h-[600px] bg-green-500/5 blur-[100px] md:blur-[150px] rounded-full -z-10"></div>
         
-        <h1 class="text-6xl md:text-8xl font-extrabold mb-8 tracking-tighter">
+        <h1 class="text-5xl sm:text-6xl md:text-8xl font-extrabold mb-6 md:mb-8 tracking-tighter">
             BoxCraft <br><span class="bc-gradient">Launcher</span>
         </h1>
         
-        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
+        <p class="text-gray-400 text-base md:text-xl max-w-2xl mb-8 md:mb-12 leading-relaxed mobile-text-center">
             La forma más moderna y eficiente de ejecutar <span class="text-white font-semibold">Minecraft: Bedrock Edition</span> en tu distribución Linux favorita.
         </p>
 
-        <button onclick="toggleModal()" class="btn-hover bg-white text-black px-12 py-5 rounded-2xl font-black text-xl flex items-center gap-4 hover:bg-green-500 transition-colors group">
-            <i class="fas fa-download group-hover:bounce"></i> Descargar Ahora
+        <button onclick="toggleModal()" class="btn-hover bg-white text-black px-8 md:px-12 py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl flex items-center gap-4 hover:bg-green-500 transition-colors group mx-4">
+            <i class="fas fa-download"></i> 
+            <span>Descargar Ahora</span>
         </button>
 
-        <div class="mt-16 flex gap-8 text-gray-500 text-sm font-mono uppercase tracking-widest">
+        <div class="mt-12 md:mt-16 flex flex-col sm:flex-row gap-4 sm:gap-8 text-gray-500 text-sm font-mono uppercase tracking-widest mobile-stack">
             <span>Versión 1.0.0</span>
-            <span>•</span>
+            <span class="hidden sm:inline">•</span>
             <span>GPLv3 License</span>
-            <span>•</span>
+            <span class="hidden sm:inline">•</span>
             <span>Linux Nativo</span>
         </div>
     </main>
 
-    <div id="modal" class="fixed inset-0 z-[100] items-center justify-center bg-black/90 backdrop-blur-md p-6">
-        <div class="bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[2.5rem] p-10 relative shadow-2xl">
-            <button onclick="toggleModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white text-3xl">&times;</button>
+    <!-- Sección de Galería -->
+    <section class="py-20 px-4 md:px-6 bg-gradient-to-b from-black/0 to-gray-900/20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">
+                <span class="bc-gradient">Capturas</span> del Launcher
+            </h2>
+            <p class="text-gray-400 text-center max-w-2xl mx-auto mb-12">
+                Descubre la interfaz moderna y las características innovadoras de BoxCraft Launcher
+            </p>
             
-            <h2 class="text-3xl font-bold mb-3">Elige tu versión</h2>
-            <p class="text-gray-400 mb-8">Descarga el instalador optimizado para tu sistema.</p>
+            <div class="carousel-container">
+                <div class="carousel-position">
+                    <span id="current-slide">1</span> / <span id="total-slides">5</span>
+                </div>
+                
+                <div class="carousel-nav prev" onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Las slides se generan dinámicamente con JavaScript -->
+                </div>
+                
+                <div class="carousel-nav next" onclick="nextSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                
+                <div class="carousel-dots" id="carousel-dots">
+                    <!-- Los puntos se generan dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="modal" class="fixed inset-0 z-[100] items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-6">
+        <div class="modal-content bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 relative shadow-2xl">
+            <button onclick="toggleModal()" class="absolute top-4 md:top-6 right-4 md:right-6 text-gray-500 hover:text-white text-2xl md:text-3xl">&times;</button>
+            
+            <h2 class="text-2xl md:text-3xl font-bold mb-3">Elige tu versión</h2>
+            <p class="text-gray-400 mb-6 md:mb-8">Descarga el instalador optimizado para tu sistema.</p>
             
             <div class="space-y-4">
-                <a href="#" class="flex items-center justify-between p-5 bg-[#2563eb]/10 border border-blue-500/20 rounded-2xl hover:bg-[#2563eb]/20 transition-all group">
+                <!-- DEB Package con logo de Deepin -->
+                <a href="#" class="flex items-center justify-between p-4 md:p-5 bg-[#0ea5e9]/10 border border-blue-500/20 rounded-2xl hover:bg-[#0ea5e9]/20 transition-all group">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white"><i class="fab fa-ubuntu text-xl"></i></div>
-                        <span class="font-bold text-blue-400 text-lg">Paquete .DEB</span>
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center text-white">
+                            <i class="fab fa-linux text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-blue-400 text-lg">Paquete .DEB</span>
+                            <p class="text-xs text-gray-400">(Debian/Ubuntu/Deepin)</p>
+                        </div>
                     </div>
                     <i class="fas fa-chevron-right text-blue-500 group-hover:translate-x-1 transition-transform"></i>
                 </a>
                 
-                <a href="#" class="flex items-center justify-between p-5 bg-[#9333ea]/10 border border-purple-500/20 rounded-2xl hover:bg-[#9333ea]/20 transition-all group">
+                <!-- Arch Linux - NO DISPONIBLE -->
+                <div class="option-disabled flex items-center justify-between p-4 md:p-5 bg-[#9333ea]/10 border border-purple-500/20 rounded-2xl transition-all">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center text-white"><i class="fas fa-archway text-xl"></i></div>
-                        <span class="font-bold text-purple-400 text-lg">Arch (AUR)</span>
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-400 rounded-lg flex items-center justify-center text-white">
+                            <i class="fas fa-archway text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-purple-400 text-lg">Arch (AUR)</span>
+                            <p class="text-xs text-gray-400">Próximamente disponible</p>
+                        </div>
                     </div>
-                    <i class="fas fa-chevron-right text-purple-500 group-hover:translate-x-1 transition-transform"></i>
-                </a>
+                    <i class="fas fa-lock text-purple-500/50"></i>
+                </div>
 
-                <a href="#" class="flex items-center justify-between p-5 bg-[#ea580c]/10 border border-orange-500/20 rounded-2xl hover:bg-[#ea580c]/20 transition-all group">
+                <!-- Flatpak - NO DISPONIBLE -->
+                <div class="option-disabled flex items-center justify-between p-4 md:p-5 bg-[#ea580c]/10 border border-orange-500/20 rounded-2xl transition-all">
                     <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center text-white"><i class="fas fa-box text-xl"></i></div>
-                        <span class="font-bold text-orange-400 text-lg">Flatpak</span>
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 rounded-lg flex items-center justify-center text-white">
+                            <i class="fas fa-box text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-orange-400 text-lg">Flatpak</span>
+                            <p class="text-xs text-gray-400">En desarrollo</p>
+                        </div>
                     </div>
-                    <i class="fas fa-chevron-right text-orange-500 group-hover:translate-x-1 transition-transform"></i>
-                </a>
+                    <i class="fas fa-lock text-orange-500/50"></i>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-4 bg-gray-900/50 rounded-xl border border-gray-800">
+                <p class="text-sm text-gray-400 text-center">
+                    <i class="fas fa-info-circle mr-2 text-green-500"></i>
+                    Actualmente solo disponible para distribuciones basadas en Debian
+                </p>
             </div>
         </div>
     </div>
 
-    <footer class="py-12 px-6 border-t border-white/5 text-center bg-black/50">
+    <footer class="py-8 md:py-12 px-4 md:px-6 border-t border-white/5 text-center bg-black/50">
         <p class="text-gray-500 text-sm mb-3">© 2026 BoxCraft Launcher - Software de código abierto - GPLv3</p>
-        <p class="text-red-500/60 text-[10px] font-bold uppercase tracking-[0.3em] max-w-md mx-auto leading-loose">
+        <p class="text-red-500/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] max-w-md mx-auto leading-loose px-4">
             NOT ASSOCIATED WITH, SPONSORED BY, OR APPROVED BY MOJANG AB OR MICROSOFT
         </p>
     </footer>
@@ -213,8 +586,12 @@
             const progressBar = document.getElementById('progress-bar');
             const loader = document.getElementById('loader-wrapper');
             const mainContent = document.getElementById('main-content');
+            const chunkCounter = document.querySelector('.chunk-counter');
             
             let width = 0;
+            let chunks = 0;
+            const totalChunks = 256;
+            
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
@@ -227,13 +604,21 @@
                     setTimeout(() => {
                         document.body.style.overflow = 'auto';
                         mainContent.classList.add('content-visible');
+                        initCarousel(); // Inicializar el carrusel después de cargar
                     }, 400);
                 } else {
-                    width += Math.random() * 15; // Carga irregular tipo juego
+                    // Incremento irregular tipo Minecraft
+                    const increment = Math.random() * (width < 70 ? 8 : 4);
+                    width += increment;
                     if (width > 100) width = 100;
+                    
+                    // Actualizar chunks
+                    chunks = Math.floor((width / 100) * totalChunks);
+                    
                     progressBar.style.width = width + '%';
+                    chunkCounter.textContent = `Chunks: ${chunks}/${totalChunks}`;
                 }
-            }, 150);
+            }, 120);
         });
 
         // Lógica del Modal
@@ -247,6 +632,200 @@
             const modal = document.getElementById('modal');
             if (event.target == modal) toggleModal();
         }
+
+        // Evitar clics en opciones deshabilitadas
+        document.querySelectorAll('.option-disabled').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Efecto visual de no disponible
+                option.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    option.style.animation = '';
+                }, 500);
+            });
+        });
+
+        // Variables del carrusel
+        let currentSlide = 0;
+        const totalSlides = 5;
+        const slidesPerView = 3;
+        let isAnimating = false;
+
+        // Inicializar carrusel
+        function initCarousel() {
+            const carouselTrack = document.getElementById('carousel-track');
+            const carouselDots = document.getElementById('carousel-dots');
+            
+            // Limpiar contenido existente
+            carouselTrack.innerHTML = '';
+            carouselDots.innerHTML = '';
+            
+            // Crear slides
+            const slideDescriptions = [
+                "Interfaz principal moderna",
+                "Gestor de instalaciones",
+                "Configuración avanzada",
+                "Panel de control del juego",
+                "Renderizado de alta calidad"
+            ];
+            
+            for (let i = 0; i < totalSlides; i++) {
+                // Crear slide
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.dataset.index = i;
+                
+                slide.innerHTML = `
+                    <img src="resources/cap${i + 1}.png" alt="Captura ${i + 1}" class="carousel-image">
+                    <div class="carousel-caption">
+                        <h3 class="font-bold text-white">${slideDescriptions[i]}</h3>
+                        <p class="text-gray-300 text-sm mt-1">Captura #${i + 1}</p>
+                    </div>
+                `;
+                
+                carouselTrack.appendChild(slide);
+                
+                // Crear punto
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+                dot.dataset.index = i;
+                dot.onclick = () => goToSlide(i);
+                carouselDots.appendChild(dot);
+            }
+            
+            // Actualizar contador
+            updatePosition();
+        }
+
+        // Navegar al slide específico
+        function goToSlide(index) {
+            if (isAnimating) return;
+            
+            currentSlide = index;
+            updateCarousel();
+            updatePosition();
+        }
+
+        // Slide siguiente
+        function nextSlide() {
+            if (isAnimating) return;
+            
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateCarousel();
+                updatePosition();
+            } else {
+                // Efecto de bucle
+                currentSlide = 0;
+                updateCarousel();
+                updatePosition();
+            }
+        }
+
+        // Slide anterior
+        function prevSlide() {
+            if (isAnimating) return;
+            
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateCarousel();
+                updatePosition();
+            } else {
+                // Efecto de bucle
+                currentSlide = totalSlides - 1;
+                updateCarousel();
+                updatePosition();
+            }
+        }
+
+        // Actualizar carrusel
+        function updateCarousel() {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            const carouselTrack = document.getElementById('carousel-track');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            // Calcular desplazamiento basado en responsive
+            let slidesToShow = slidesPerView;
+            if (window.innerWidth <= 1024) slidesToShow = 2;
+            if (window.innerWidth <= 768) slidesToShow = 1;
+            
+            // Calcular transformación
+            const slideWidth = 100 / slidesToShow;
+            const translateX = -(currentSlide * slideWidth);
+            
+            // Aplicar transformación con animación
+            carouselTrack.style.transform = `translateX(${translateX}%)`;
+            
+            // Actualizar puntos activos
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Resetear flag de animación
+            setTimeout(() => {
+                isAnimating = false;
+            }, 800);
+        }
+
+        // Actualizar indicador de posición
+        function updatePosition() {
+            const currentSlideEl = document.getElementById('current-slide');
+            const totalSlidesEl = document.getElementById('total-slides');
+            
+            if (currentSlideEl) currentSlideEl.textContent = currentSlide + 1;
+            if (totalSlidesEl) totalSlidesEl.textContent = totalSlides;
+        }
+
+        // Auto-play del carrusel
+        let autoPlayInterval;
+        
+        function startAutoPlay() {
+            stopAutoPlay();
+            autoPlayInterval = setInterval(nextSlide, 5000);
+        }
+        
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+            }
+        }
+
+        // Iniciar auto-play cuando el mouse sale del carrusel
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = document.querySelector('.carousel-container');
+            if (carousel) {
+                carousel.addEventListener('mouseenter', stopAutoPlay);
+                carousel.addEventListener('mouseleave', startAutoPlay);
+            }
+            
+            // Iniciar auto-play
+            startAutoPlay();
+        });
+
+        // Redimensionar ventana
+        window.addEventListener('resize', updateCarousel);
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Agregar animación shake
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
