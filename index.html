@@ -600,7 +600,67 @@
         </div>
     </main>
 
-    <!-- Sección de Galería -->
+    <section class="py-20 px-4 md:px-6 relative overflow-hidden bg-[#121212]/50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                Características del <span class="bc-gradient">Launcher</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-all group">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-file-archive text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Instalación vía APK</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Permite instalar el juego utilizando un archivo APK.
+                        <span class="block mt-2 text-xs italic opacity-60">*Nota: No proporcionamos archivos APK; el acceso a los mismos es responsabilidad del usuario.</span>
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-all group">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-microchip text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Tecnología Robusta</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Permite iniciar el juego utilizando <span class="text-white">mcpelauncher-client</span> y extraer sus datos usando <span class="text-white">mcpelauncher-extract</span>, tambien usa otras herramientas como <span class="text-white">mcpelauncher-webview</span> y <span class="text-white">mcpelauncher-errorwindow</span>.
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-all group">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-fire text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">API de Curseforge</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Proporciona acceso a la instalación de complementos (add-ons), paquetes de texturas, mundos y skins (opción futura) a través de la API de Curseforge.
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-all group">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-folder-plus text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Gestión Eficiente</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Permite la instalación y gestión fácil y rápida de mods, paquetes de texturas y mundos.
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-all group md:col-span-2 lg:col-span-2">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-paint-brush text-2xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Experiencia Minecraft</h3>
+                    <p class="text-gray-400 leading-relaxed text-sm">
+                        Diseño moderno estilo minecraft, optimizado para ofrecer una interfaz familiar y fluida para todos los jugadores.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="py-20 px-4 md:px-6 bg-gradient-to-b from-black/0 to-gray-900/20">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-4">
@@ -621,8 +681,7 @@
                 
                 <div class="carousel-center-helper">
                     <div class="carousel-track" id="carousel-track">
-                        <!-- Las slides se generan dinámicamente con JavaScript -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div class="carousel-nav next" onclick="nextSlide()">
@@ -632,7 +691,6 @@
         </div>
     </section>
 
-    <!-- Modal de Imagen Expandida -->
     <div class="image-modal" id="image-modal">
         <div class="modal-content-wrapper">
             <div class="modal-controls">
@@ -660,7 +718,6 @@
             <p class="text-gray-400 mb-6 md:mb-8">Descarga el instalador optimizado para tu sistema.</p>
             
             <div class="space-y-4">
-                <!-- DEB Package con logo de Deepin -->
                 <a href="https://github.com/lxGNU/BoxCraft-Launcher/releases/download/v1.0.0/boxcraft-launcher_1.0.0_amd64.deb" class="flex items-center justify-between p-4 md:p-5 bg-[#0ea5e9]/10 border border-blue-500/20 rounded-2xl hover:bg-[#0ea5e9]/20 transition-all group">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center text-white">
@@ -674,7 +731,6 @@
                     <i class="fas fa-chevron-right text-blue-500 group-hover:translate-x-1 transition-transform"></i>
                 </a>
                 
-                <!-- Arch Linux - NO DISPONIBLE -->
                 <div class="option-disabled flex items-center justify-between p-4 md:p-5 bg-[#9333ea]/10 border border-purple-500/20 rounded-2xl transition-all">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-400 rounded-lg flex items-center justify-center text-white">
@@ -688,7 +744,6 @@
                     <i class="fas fa-lock text-purple-500/50"></i>
                 </div>
 
-                <!-- Flatpak - NO DISPONIBLE -->
                 <div class="option-disabled flex items-center justify-between p-4 md:p-5 bg-[#ea580c]/10 border border-orange-500/20 rounded-2xl transition-all">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-400 rounded-lg flex items-center justify-center text-white">
@@ -1118,6 +1173,12 @@
             /* Animación suave para transición de slides */
             .carousel-track {
                 transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            /* Efecto hover en tarjetas de características */
+            .group:hover {
+                background: rgba(255, 255, 255, 0.08);
+                transform: translateY(-5px);
             }
         `;
         document.head.appendChild(style);
